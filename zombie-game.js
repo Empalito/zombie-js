@@ -1,8 +1,8 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 1500;
-canvas.height = 800;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 const player = {
   x: canvas.width / 2,
@@ -16,8 +16,10 @@ const player = {
 const zombies = [];
 let score = 0;
 let gameOver = false;
+let aliveZombies = 0;
 
 function spawnZombie() {
+  if (aliveZombies === 0) {
   const zombie = {
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -25,6 +27,19 @@ function spawnZombie() {
     isAlive: true,
   };
   zombies.push(zombie);
+  aliveZombies++;
+
+  if (score>= 10){
+    const zombie2 ={
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      speed: 2,
+      isAlive: true,
+    };
+    zombies.push(zombie2);
+    aliveZombies++;
+  }
+}
 }
 
 spawnZombie();
@@ -37,51 +52,70 @@ document.addEventListener("keydown", (event) => {
 
 document.addEventListener("keyup", (event) => {
   keys[event.code] = false;
+
 });
+
+const images = {
+  up: new Image(),
+  down: new Image(),
+  left: new Image(),
+  right: new Image(),
+};
+
+images.up.src='ShooterUp.png'
+images.down.src='ShooterDown.png'
+images.right.src='ShooterRight.png'
+images.left.src='ShooterLeft.png'
+
+const zombieImage = new Image ();
+zombieImage.src = 'zombie.png';
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "green";
-  ctx.fillRect(player.x - 10, player.y - 10, 20, 20);
-
+  switch (player.direction) {
+    case 'up':
+      ctx.drawImage(images.up, player.x - 10, player.y - 10, 40, 40);
+      break;
+    case 'down':
+      ctx.drawImage(images.down, player.x - 10, player.y - 10, 40, 40);
+      break;
+    case 'left':
+      ctx.drawImage(images.left, player.x - 10, player.y - 10, 40, 40);
+      break;
+    case 'right':
+      ctx.drawImage(images.right, player.x - 10, player.y - 10, 40, 40);
+      break;
+  }
   for (const zombie of zombies) {
     if (zombie.isAlive) {
-      ctx.fillStyle = "red";
-      ctx.fillRect(zombie.x - 10, zombie.y - 10, 20, 20);
-    }
+      ctx.drawImage(zombieImage, zombie.x - zombieImage.width / 5, zombie.y - zombieImage.height / 5, zombieImage.width / 2, zombieImage.height / 2);    }
   }
 
   for (const bullet of player.bullets) {
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "red";
     ctx.fillRect(bullet.x - 5, bullet.y - 5, 10, 10);
   }
 
   ctx.fillStyle = "black";
-  ctx.fillText(`Score: ${score}`, 10, 20);
-
-  if (gameOver) {
-    ctx.fillStyle = "red";
-    ctx.font = "50px Arial";
-    ctx.fillText("Game Over", canvas.width / 2 - 120, canvas.height / 2);
-  }
+  ctx.fillText(`Score: ${score}`, 10, 20, );
 }
 
 function updatePlayer() {
   if (!gameOver) {
-    if (keys["ArrowUp"]) {
+    if (keys["ArrowUp"] && player.y > 0) {
       player.y -= player.speed;
       player.direction = "up";
     }
-    if (keys["ArrowDown"]) {
+    if (keys["ArrowDown"] && player.y < canvas.height) {
       player.y += player.speed;
       player.direction = "down";
     }
-    if (keys["ArrowLeft"]) {
+    if (keys["ArrowLeft"] && player.x > 0) {
       player.x -= player.speed;
       player.direction = "left";
     }
-    if (keys["ArrowRight"]) {
+    if (keys["ArrowRight"] && player.x <canvas.width) {
       player.x += player.speed;
       player.direction = "right";
     }
@@ -117,29 +151,33 @@ function updateZombies() {
       const dx = player.x - zombie.x;
       const dy = player.y - zombie.y;
       const angle = Math.atan2(dy, dx);
-      zombie.x= zombie.x + Math.cos(angle) * zombie.speed;
+      zombie.x = zombie.x + Math.cos(angle) * zombie.speed;
       zombie.y = zombie.y + Math.sin(angle) * zombie.speed;
       for (const bullet of player.bullets) {
         const distX = Math.abs(bullet.x - zombie.x);
         const distY = Math.abs(bullet.y - zombie.y);
-    
+
         if (distX < 15 && distY < 15) {
           zombie.isAlive = false;
           player.bullets.splice(player.bullets.indexOf(bullet), 1);
           score++;
-          spawnZombie();
+          aliveZombies--;
         }
       }
-    
+
       const distX = Math.abs(player.x - zombie.x);
       const distY = Math.abs(player.y - zombie.y);
-    
+
       if (distX < 15 && distY < 15) {
         gameOver = true;
       }
     }
-    }
-    }
+  }
+
+  if (aliveZombies === 0) {
+    spawnZombie();
+  }
+}
     
     function gameLoop() {
     draw();
