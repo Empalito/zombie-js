@@ -1,4 +1,3 @@
-const pixelRatio = window.devicePixelRatio || 1;
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -8,7 +7,7 @@ canvas.height = window.innerHeight;
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  speed: Math.max(canvas.width, canvas.height) / (700 * pixelRatio),
+  speed: 6,
   isShooting: false,
   bullets: [],
   direction: "right",
@@ -26,7 +25,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: Math.max(canvas.width, canvas.height) / (1500 * pixelRatio),
+          speed: 2,
           isAlive: true,
         });
         aliveZombies++;
@@ -36,7 +35,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.max(canvas.width, canvas.height) / (1000 * pixelRatio),
+            speed: 2,
             isAlive: true,
           });
           aliveZombies++;
@@ -47,7 +46,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.max(canvas.width, canvas.height) / (800 * pixelRatio),
+            speed: 3,
             isAlive: true,
           });
           aliveZombies++;
@@ -58,7 +57,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.max(canvas.width, canvas.height) / (1500 * pixelRatio),
+            speed:5,
             isAlive: true,
           });
           aliveZombies++;
@@ -68,7 +67,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: Math.max(canvas.width, canvas.height) / (200 * pixelRatio),
+          speed: 2,
           isAlive: true,
         });
         aliveZombies++;
