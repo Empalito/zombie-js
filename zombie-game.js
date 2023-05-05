@@ -1,3 +1,4 @@
+const pixelRatio = window.devicePixelRatio || 1;
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -7,7 +8,7 @@ canvas.height = window.innerHeight;
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  speed: Math.max(canvas.width, canvas.height) / 700,
+  speed: Math.max(canvas.width, canvas.height) / (700 * pixelRatio),
   isShooting: false,
   bullets: [],
   direction: "right",
@@ -25,7 +26,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: Math.max(canvas.width, canvas.height) / 1500,
+          speed: Math.max(canvas.width, canvas.height) / (1500 * pixelRatio),
           isAlive: true,
         });
         aliveZombies++;
@@ -35,7 +36,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.max(canvas.width, canvas.height) / 1000,
+            speed: Math.max(canvas.width, canvas.height) / (1000 * pixelRatio),
             isAlive: true,
           });
           aliveZombies++;
@@ -46,7 +47,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.max(canvas.width, canvas.height) / 800,
+            speed: Math.max(canvas.width, canvas.height) / (800 * pixelRatio),
             isAlive: true,
           });
           aliveZombies++;
@@ -57,7 +58,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.max(canvas.width, canvas.height) / 1500,
+            speed: Math.max(canvas.width, canvas.height) / (1500 * pixelRatio),
             isAlive: true,
           });
           aliveZombies++;
@@ -67,7 +68,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: Math.max(canvas.width, canvas.height) / 200,
+          speed: Math.max(canvas.width, canvas.height) / (200 * pixelRatio),
           isAlive: true,
         });
         aliveZombies++;
