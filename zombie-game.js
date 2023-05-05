@@ -7,7 +7,7 @@ canvas.height = window.innerHeight;
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  speed: 6,
+  speed: Math.max(canvas.width, canvas.height) / 700,
   isShooting: false,
   bullets: [],
   direction: "right",
@@ -25,7 +25,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: 2,
+          speed: Math.max(canvas.width, canvas.height) / 1500,
           isAlive: true,
         });
         aliveZombies++;
@@ -35,7 +35,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: 2,
+            speed: Math.max(canvas.width, canvas.height) / 1000,
             isAlive: true,
           });
           aliveZombies++;
@@ -46,7 +46,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: 3,
+            speed: Math.max(canvas.width, canvas.height) / 800,
             isAlive: true,
           });
           aliveZombies++;
@@ -57,7 +57,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed:5,
+            speed: Math.max(canvas.width, canvas.height) / 1500,
             isAlive: true,
           });
           aliveZombies++;
@@ -67,7 +67,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: 2,
+          speed: Math.max(canvas.width, canvas.height) / 200,
           isAlive: true,
         });
         aliveZombies++;
