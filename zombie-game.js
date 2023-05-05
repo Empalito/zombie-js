@@ -7,7 +7,7 @@ canvas.height = window.innerHeight;
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  speed: 5,
+  speed: 6,
   isShooting: false,
   bullets: [],
   direction: "right",
@@ -20,26 +20,60 @@ let aliveZombies = 0;
 
 function spawnZombie() {
   if (aliveZombies === 0) {
-  const zombie = {
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    speed: 2,
-    isAlive: true,
-  };
-  zombies.push(zombie);
-  aliveZombies++;
-
-  if (score>= 10){
-    const zombie2 ={
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      speed: 2,
-      isAlive: true,
-    };
-    zombies.push(zombie2);
-    aliveZombies++;
+    switch (true) {
+      case score < 10:
+        zombies.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          speed: 2,
+          isAlive: true,
+        });
+        aliveZombies++;
+        break;
+      case score >= 10 && score < 20:
+        for (let i = 0; i < 2; i++) {
+          zombies.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speed: 2,
+            isAlive: true,
+          });
+          aliveZombies++;
+        }
+        break;
+      case score >= 20 && score < 30:
+        for (let i = 0; i < 3; i++) {
+          zombies.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speed: 3,
+            isAlive: true,
+          });
+          aliveZombies++;
+        }
+        break;
+      case score >= 32 && score < 50:
+        for (let i = 0; i<7; i++) {
+          zombies.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            speed:5,
+            isAlive: true,
+          });
+          aliveZombies++;
+        }
+        break;
+      default:
+        zombies.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          speed: 2,
+          isAlive: true,
+        });
+        aliveZombies++;
+        break;
+    }
   }
-}
 }
 
 spawnZombie();
