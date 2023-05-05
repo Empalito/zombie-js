@@ -7,7 +7,7 @@ canvas.height = window.innerHeight;
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
-  speed: Math.min(canvas.width, canvas.height) * 0.01,
+  speed: 6,
   isShooting: false,
   bullets: [],
   direction: "right",
@@ -25,7 +25,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: Math.min(canvas.width, canvas.height) * 0.008,
+          speed: 2,
           isAlive: true,
         });
         aliveZombies++;
@@ -35,7 +35,7 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.min(canvas.width, canvas.height) * 0.008,
+            speed: 2,
             isAlive: true,
           });
           aliveZombies++;
@@ -46,18 +46,18 @@ function spawnZombie() {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.min(canvas.width, canvas.height) * 0.01,
+            speed: 3,
             isAlive: true,
           });
           aliveZombies++;
         }
         break;
       case score >= 32 && score < 50:
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i<7; i++) {
           zombies.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            speed: Math.min(canvas.width, canvas.height) * 0.015,
+            speed:5,
             isAlive: true,
           });
           aliveZombies++;
@@ -67,7 +67,7 @@ function spawnZombie() {
         zombies.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          speed: Math.min(canvas.width, canvas.height) * 0.008,
+          speed: 2,
           isAlive: true,
         });
         aliveZombies++;
