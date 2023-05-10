@@ -4,6 +4,20 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+document.addEventListener('click', function() {
+  audio.play();
+});
+
+const audio = new Audio ('01.Forever Bound - Stereo Madness.mp3');
+audio.play();
+
+function playAudio () {
+  const audio = new Audio('01.Forever Bound - Stereo Madness.mp3');
+  audio.volume = 0.2; // Set the volume to 50%
+  audio.play();
+}
+
+
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -27,6 +41,7 @@ function spawnZombie() {
           y: Math.random() * canvas.height,
           speed: 2,
           isAlive: true,
+          health: 1,
         });
         aliveZombies++;
         break;
@@ -37,6 +52,7 @@ function spawnZombie() {
             y: Math.random() * canvas.height,
             speed: 2,
             isAlive: true,
+            health: 2,
           });
           aliveZombies++;
         }
@@ -48,6 +64,7 @@ function spawnZombie() {
             y: Math.random() * canvas.height,
             speed: 3,
             isAlive: true,
+            health: 3,
           });
           aliveZombies++;
         }
@@ -59,6 +76,7 @@ function spawnZombie() {
             y: Math.random() * canvas.height,
             speed:5,
             isAlive: true,
+            health: 4,
           });
           aliveZombies++;
         }
@@ -69,6 +87,7 @@ function spawnZombie() {
           y: Math.random() * canvas.height,
           speed: 2,
           isAlive: true,
+          health: 2,
         });
         aliveZombies++;
         break;
@@ -123,7 +142,9 @@ function draw() {
   }
   for (const zombie of zombies) {
     if (zombie.isAlive) {
-      ctx.drawImage(zombieImage, zombie.x - zombieImage.width / 5, zombie.y - zombieImage.height / 5, zombieImage.width / 2, zombieImage.height / 2);    }
+      ctx.drawImage(zombieImage, zombie.x - zombieImage.width / 5, zombie.y - zombieImage.height / 5, zombieImage.width / 2, zombieImage.height / 2);    
+      drawHealthBar(zombie);
+    }
   }
 
   for (const bullet of player.bullets) {
@@ -133,6 +154,20 @@ function draw() {
 
   ctx.fillStyle = "black";
   ctx.fillText(`Score: ${score}`, 10, 20, );
+}
+
+function drawHealthBar(zombie) {
+  const healthBarWidth = 30;
+  const healthBarHeight = 5;
+  const healthBarX = zombie.x - healthBarWidth / 2;
+  const healthBarY = zombie.y - 30;
+  const currentHealthWidth = (healthBarWidth / 2) * zombie.health;
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+
+  ctx.fillStyle = "red";
+  ctx.fillRect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
 }
 
 function updatePlayer() {
@@ -192,10 +227,15 @@ function updateZombies() {
         const distY = Math.abs(bullet.y - zombie.y);
 
         if (distX < 15 && distY < 15) {
-          zombie.isAlive = false;
+          
+          zombie.health--;
           player.bullets.splice(player.bullets.indexOf(bullet), 1);
-          score++;
+
+          if (zombie.health === 0) {
           aliveZombies--;
+          score++;
+          zombie.isAlive = false;
+          }
         }
       }
 
@@ -222,5 +262,5 @@ function updateZombies() {
     requestAnimationFrame(gameLoop);
     }
     }
-    
+    playAudio();
     gameLoop();
