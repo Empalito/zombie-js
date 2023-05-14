@@ -1,21 +1,26 @@
+const button = document.getElementById("button");
+
+const audio = new Audio ('01.Forever Bound - Stereo Madness.mp3');
+
+window.addEventListener('load', function() {
+
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-document.addEventListener('click', function() {
-  audio.play();
-});
-
-const audio = new Audio ('01.Forever Bound - Stereo Madness.mp3');
-audio.play();
-
 function playAudio () {
-  const audio = new Audio('01.Forever Bound - Stereo Madness.mp3');
   audio.volume = 0.2; // Set the volume to 50%
   audio.play();
 }
+
+document.addEventListener("keydown", (e) => {
+  if (e) {
+    playAudio()
+  }
+})
 
 
 const player = {
@@ -261,6 +266,10 @@ function updateZombies() {
     if (!gameOver) {
     requestAnimationFrame(gameLoop);
     }
+    else {
+      audio.pause();
+    }
     }
     playAudio();
     gameLoop();
+  });
