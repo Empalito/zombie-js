@@ -1,19 +1,26 @@
 const button = document.getElementById("button");
-
 const audio = new Audio ('01.Forever Bound - Stereo Madness.mp3');
+const backgroundImage = new Image();  
+backgroundImage.src = "background.jpg";
+
 
 window.addEventListener('load', function() {
-
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+
+
+
 function playAudio () {
-  audio.volume = 0.2; // Set the volume to 50%
-  audio.play();
+  if (!gameOver) {
+    audio.volume = 0.2; // Set the volume to 50%
+    audio.play();
+  } else {
+    audio.pause();
+  }
 }
 
 document.addEventListener("keydown", (e) => {
@@ -30,6 +37,7 @@ const player = {
   isShooting: false,
   bullets: [],
   direction: "right",
+  health: 100,
 };
 
 const zombies = [];
@@ -37,68 +45,83 @@ let score = 0;
 let gameOver = false;
 let aliveZombies = 0;
 
-function spawnZombie() {
-  if (aliveZombies === 0) {
-    switch (true) {
-      case score < 10:
-        zombies.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          speed: 2,
-          isAlive: true,
-          health: 1,
-        });
-        aliveZombies++;
-        break;
-      case score >= 10 && score < 20:
-        for (let i = 0; i < 2; i++) {
-          zombies.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            speed: 2,
-            isAlive: true,
-            health: 2,
-          });
-          aliveZombies++;
-        }
-        break;
-      case score >= 20 && score < 30:
-        for (let i = 0; i < 3; i++) {
-          zombies.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            speed: 3,
-            isAlive: true,
-            health: 3,
-          });
-          aliveZombies++;
-        }
-        break;
-      case score >= 32 && score < 50:
-        for (let i = 0; i<7; i++) {
-          zombies.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            speed:5,
-            isAlive: true,
-            health: 4,
-          });
-          aliveZombies++;
-        }
-        break;
-      default:
-        zombies.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          speed: 2,
-          isAlive: true,
-          health: 2,
-        });
-        aliveZombies++;
-        break;
+function showLevelUpMessage(level) {
+  const levelUp = new Audio('rizz-sounds.mp3');
+  levelUp.play();
+  const popup = document.createElement('div');
+  popup.innerText = `Level ${level}!`;
+  popup.style.cssText = `
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  color: #ffffff;
+  text-shadow: 0 0 10px #ffffff;
+  opacity: 0;
+  animation: levelUpPopup 1s ease forwards;
+`;
+  document.body.appendChild(popup);
+  setTimeout(() => 
+  popup.remove(), 1000);
+}
+// Add a CSS animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes levelUpPopup {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.2);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
     }
   }
+`;
+document.head.appendChild(style);
+
+function spawnZombie() {
+  if (score === 10 || score === 20 || score === 32) {
+    showLevelUpMessage(score / 10);
+  }
+
+  if (aliveZombies > 0) return;
+
+  let zombieCount = 1;
+  let zombieSpeed = 2;
+  let zombieHealth = 1;
+
+  if (score >= 10 && score < 20) {
+    zombieCount = 2;
+    zombieSpeed = 2;
+    zombieHealth = 2;
+  } else if (score >= 20 && score < 30) {
+    zombieCount = 3;
+    zombieSpeed = 3;
+    zombieHealth = 3;
+  } else if (score >= 32 && score < 50) {
+    zombieCount = 7;
+    zombieSpeed = 5;
+    zombieHealth = 4;
+  }
+
+  for (let i = 0; i < zombieCount; i++) {
+    zombies.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      speed: zombieSpeed,
+      isAlive: true,
+      health: zombieHealth,
+    });
+    aliveZombies++;
+  }
 }
+
 
 spawnZombie();
 
@@ -128,9 +151,21 @@ images.left.src='ShooterLeft.png'
 const zombieImage = new Image ();
 zombieImage.src = 'zombie.png';
 
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function drawPlayerHealthBar() {
+  const healthBarWidth = 100;
+  const healthBarHeight = 10;
+  const healthBarX = player.x - healthBarWidth / 2;
+  const healthBarY = player.y - 30;
+  const currentHealthWidth = (healthBarWidth / 100) * player.health;
 
+  ctx.fillStyle = "black";
+  ctx.fillRect(healthBarX, healthBarY, healthBarWidth, healthBarHeight);
+
+  ctx.fillStyle = "green";
+  ctx.fillRect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
+}
+function draw() {
+  ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
   switch (player.direction) {
     case 'up':
       ctx.drawImage(images.up, player.x - 10, player.y - 10, 40, 40);
@@ -145,6 +180,9 @@ function draw() {
       ctx.drawImage(images.right, player.x - 10, player.y - 10, 40, 40);
       break;
   }
+
+  drawPlayerHealthBar();
+
   for (const zombie of zombies) {
     if (zombie.isAlive) {
       ctx.drawImage(zombieImage, zombie.x - zombieImage.width / 5, zombie.y - zombieImage.height / 5, zombieImage.width / 2, zombieImage.height / 2);    
@@ -157,8 +195,17 @@ function draw() {
     ctx.fillRect(bullet.x - 5, bullet.y - 5, 10, 10);
   }
 
-  ctx.fillStyle = "black";
-  ctx.fillText(`Score: ${score}`, 10, 20, );
+  document.getElementById("score").innerText = `Score: ${score}`;
+
+
+  if (gameOver) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "red";
+    ctx.font = "80px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over!", canvas.width/2, canvas.height/2);
+  }
 }
 
 function drawHealthBar(zombie) {
@@ -174,6 +221,9 @@ function drawHealthBar(zombie) {
   ctx.fillStyle = "red";
   ctx.fillRect(healthBarX, healthBarY, currentHealthWidth, healthBarHeight);
 }
+
+let bulletCooldown = 0;
+
 
 function updatePlayer() {
   if (!gameOver) {
@@ -194,12 +244,16 @@ function updatePlayer() {
       player.direction = "right";
     }
 
-    if (keys["Space"]) {
-      if (!player.isShooting) {
-        player.isShooting = true;
-        player.bullets.push({ x: player.x, y: player.y, direction: player.direction });
-      }
-    } else {
+    if (keys["Space"] && bulletCooldown <= 0) {
+      bulletCooldown = 60; 
+      player.isShooting = true;
+      player.bullets.push({ x: player.x, y: player.y, direction: player.direction });
+      const shootingSound = new Audio('bullet.mp3');
+      shootingSound.play();
+    } 
+    if (bulletCooldown > 0) bulletCooldown--;
+
+      else {
       player.isShooting = false;
     }
 
@@ -248,28 +302,47 @@ function updateZombies() {
       const distY = Math.abs(player.y - zombie.y);
 
       if (distX < 15 && distY < 15) {
+        player.health -= 10;
+      
+      if (player.health === 0) {
         gameOver = true;
-      }
+        const deathSound = new Audio('geometry-dash-death-sound-effect.mp3');
+        deathSound.play();
+      } 
+
     }
   }
+}
 
   if (aliveZombies === 0) {
     spawnZombie();
   }
 }
-    
-    function gameLoop() {
+function redirectToNewPage() {
+  audio.pause();
+  const discordLeave = new Audio('discord-leave-noise.mp3');
+  discordLeave.play();
+  setTimeout(() => {
+    window.location.href = 'index.html';
+  }, 1000);
+}
+function gameLoop() {
+  if (!gameOver) {
     draw();
     updatePlayer();
     updateZombies();
-    
-    if (!gameOver) {
     requestAnimationFrame(gameLoop);
-    }
-    else {
-      audio.pause();
-    }
-    }
+  } else {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "red";
+    ctx.font = "80px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Game Over!", canvas.width/2, canvas.height/2);
+    audio.pause();
+    setTimeout(redirectToNewPage, 2000);
+  }
+}
     playAudio();
     gameLoop();
   });

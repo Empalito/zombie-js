@@ -8,15 +8,39 @@
         height: 100%;
         box-sizing: border-box;
         position: fixed;
-        top: 30px;
+        top: 0px;
         right: 20px;
-        bottom: 1px;  
-        left: 1px; 
+        bottom: 70px;  
+        left: 0px; 
       }
+
+      #score {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 48px;
+  font-family: 'Zombie', cursive;;
+  color: wheat;
+  text-shadow: 2px 2px 4px black;
+  animation: score-pulse 1s ease-in-out infinite;
+}
+
+@keyframes score-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
     </style>
   </head>
   <body>
     <canvas id="canvas"></canvas>
+    <div id="score">Score: 0</div>
     <script src="zombie-game.js"></script>
   </body>
 </html>
