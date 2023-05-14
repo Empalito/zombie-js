@@ -1,7 +1,7 @@
 const button = document.getElementById("button");
-const audio = new Audio ('01.Forever Bound - Stereo Madness.mp3');
+const audio = new Audio ('sound/01.Forever Bound - Stereo Madness.mp3');
 const backgroundImage = new Image();  
-backgroundImage.src = "background.jpg";
+backgroundImage.src = "image/background.jpg";
 
 
 window.addEventListener('load', function() {
@@ -46,7 +46,7 @@ let gameOver = false;
 let aliveZombies = 0;
 
 function showLevelUpMessage(level) {
-  const levelUp = new Audio('rizz-sounds.mp3');
+  const levelUp = new Audio('sound/rizz-sounds.mp3');
   levelUp.play();
   const popup = document.createElement('div');
   popup.innerText = `Level ${level}!`;
@@ -143,13 +143,13 @@ const images = {
   right: new Image(),
 };
 
-images.up.src='ShooterUp.png'
-images.down.src='ShooterDown.png'
-images.right.src='ShooterRight.png'
-images.left.src='ShooterLeft.png'
+images.up.src='image/ShooterUp.png'
+images.down.src='image/ShooterDown.png'
+images.right.src='image/ShooterRight.png'
+images.left.src='image/ShooterLeft.png'
 
 const zombieImage = new Image ();
-zombieImage.src = 'zombie.png';
+zombieImage.src = 'image/zombie.png';
 
 function drawPlayerHealthBar() {
   const healthBarWidth = 100;
@@ -248,7 +248,7 @@ function updatePlayer() {
       bulletCooldown = 60; 
       player.isShooting = true;
       player.bullets.push({ x: player.x, y: player.y, direction: player.direction });
-      const shootingSound = new Audio('bullet.mp3');
+      const shootingSound = new Audio('sound/bullet.mp3');
       shootingSound.play();
     } 
     if (bulletCooldown > 0) bulletCooldown--;
@@ -306,7 +306,7 @@ function updateZombies() {
       
       if (player.health === 0) {
         gameOver = true;
-        const deathSound = new Audio('geometry-dash-death-sound-effect.mp3');
+        const deathSound = new Audio('sound/geometry-dash-death-sound-effect.mp3');
         deathSound.play();
       } 
 
@@ -320,7 +320,7 @@ function updateZombies() {
 }
 function redirectToNewPage() {
   audio.pause();
-  const discordLeave = new Audio('discord-leave-noise.mp3');
+  const discordLeave = new Audio('sound/discord-leave-noise.mp3');
   discordLeave.play();
   setTimeout(() => {
     window.location.href = 'index.html';
