@@ -1,9 +1,10 @@
+// Defining basic elements
 const button = document.getElementById("button");
 const audio = new Audio ('sound/01.Forever Bound - Stereo Madness.mp3');
 const backgroundImage = new Image();  
 backgroundImage.src = "image/background.jpg";
 
-
+//When window loads the canvas context is gotten and sized to the window
 window.addEventListener('load', function() {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
@@ -13,23 +14,23 @@ canvas.height = window.innerHeight;
 
 
 
-
+//Function that plays the audio
 function playAudio () {
   if (!gameOver) {
-    audio.volume = 0.2; // Set the volume to 50%
+    audio.volume = 0.2; 
     audio.play();
   } else {
     audio.pause();
   }
 }
-
+//Eventlistener that calls the audio when a button is pressed.
 document.addEventListener("keydown", (e) => {
   if (e) {
     playAudio()
   }
 })
 
-
+//Gives the player a few properties.
 const player = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -39,12 +40,13 @@ const player = {
   direction: "right",
   health: 100,
 };
-
+//Empty array 
 const zombies = [];
 let score = 0;
 let gameOver = false;
 let aliveZombies = 0;
 
+//Function plays audio creates and shows a popup text when a certain score is reached.
 function showLevelUpMessage(level) {
   const levelUp = new Audio('sound/rizz-sounds.mp3');
   levelUp.play();
@@ -85,6 +87,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+//An array that holds the current state of all zombies in the game and then is used to update and render them on screen.
 function spawnZombie() {
   if (score === 10 || score === 20 || score === 32) {
     showLevelUpMessage(score / 10);
